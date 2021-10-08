@@ -1,3 +1,5 @@
+#Requires -Modules PsIni
+
 If ((Test-Path -Path "$env:LOCALAPPDATA\Wabbajack") -ne $true) {
   Write-Error -Message "Wabbajack data folder doesn't exist. Please start Wabbajack first."
   Write-Host -NoNewLine "Press any key to continue...";
@@ -6,17 +8,18 @@ If ((Test-Path -Path "$env:LOCALAPPDATA\Wabbajack") -ne $true) {
 }
 $WJsettings = Get-Content -Raw -Path "$env:LOCALAPPDATA\Wabbajack\settings.json" | ConvertFrom-Json
 
-
-# TODO: Check wabbajack.meta or manifest file, and get name of modlist.
-If ((Test-Path -Path "$PSScriptRoot\wjcompile.toml") -ne $true) {
-  $ModlistLocation = Read-Host 'Where is your modlist located?'
+If (Test-Path "${PSScriptRoot}\..\wjcompile.ini") {
+  $WJCompileINI = Get-IniContent "${PSScriptRoot}\..\wjcompile.ini"
+} ElseIf (Test-Path "${PSScriptRoot}\wjcompile.ini") {
+  $WJCompileINI = Get-IniContent "${PSScriptRoot}\wjcompile.ini"
 } Else {
-  $ModlistLocation = "$PSScriptRoot\wjcompile.toml"
+  $WJCompileINI = Get-IniContent (Read-Host "Please enter the location of wjcompile.ini")
 }
 
-# TODO: Check and create function for wjcompile.toml file
-If ((Test-Path -Path "$PSScriptRoot\wjcompile.toml") -ne $true) {
-  $ModlistLocation = Read-Host 'Where is your modlist located?'
+If (Test-Path ($WJCompileINI.DirectoryName + "\wjcompile.local.ini")) {
+  $WJCompileINI += Get-IniContent "${PSScriptRoot}\..\wjcompile.ini"
 } Else {
-  $ModlistLocation = "$PSScriptRoot\wjcompile.toml"
+  $WJCompileINI += Get-IniContent (Read-Host "Please enter the location of wjcompile.ini")
 }
+
+# TODO: Clean out $WJsettings.Compiler, replace with $WJCompileINI.Values
