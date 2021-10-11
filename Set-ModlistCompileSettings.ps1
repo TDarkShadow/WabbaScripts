@@ -21,7 +21,7 @@ If (Test-Path "${PSScriptRoot}\..\wjcompile.ini") {
 } Else {
   $WJCompileINILocation = Read-Host "Please enter the location of wjcompile.ini"
   If ((Test-Path -Path $WJCompileINILocation) -ne $true) {
-    Write-Error -Message "Wabbajack Compile INI file doesn't exist. Please create one first."
+    Write-Error -Message "wjcompile.ini file doesn't exist. Please create one first."
     Write-Host -NoNewLine "Press any key to continue...";
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
     Exit
@@ -30,19 +30,22 @@ If (Test-Path "${PSScriptRoot}\..\wjcompile.ini") {
 }
 
 # Get the contents of the local wjcompile ini if possible.
-# Checking the same folder of the general wjcompile ini first, ...
-If (Test-Path ($WJCompileINI.DirectoryName + "\wjcompile.local.ini")) {
-  $WJCompileINI += Get-IniContent ($WJCompileINI.DirectoryName + "\wjcompile.local.ini")
+# Checking the parent folder first, ...
+If (Test-Path "${PSScriptRoot}\..\wjcompile.local.ini") {
+  $WJCompileINI += Get-IniContent "${PSScriptRoot}\..\wjcompile.local.ini"
+# then the root folder.
+} ElseIf (Test-Path "${PSScriptRoot}\wjcompile.local.ini") {
+  $WJCompileINI += Get-IniContent "${PSScriptRoot}\wjcompile.local.ini"
+# If still not found, ask the user for the location.
 } Else {
-  # If still not found, ask the user for the location.
-  $WJCompileINILocalLocation = Read-Host "Please enter the location of wjcompile.local.ini"
-  If ((Test-Path -Path $WJCompileINILocalLocation) -ne $true) {
-    Write-Error -Message "Wabbajack Compile Local INI file doesn't exist. Please create one first."
+  $WJLocalCompileINILocation = Read-Host "Please enter the location of wjcompile.local.ini"
+  If ((Test-Path -Path $WJLocalCompileINILocation) -ne $true) {
+    Write-Error -Message "wjcompile.local.ini file doesn't exist. Please create one first."
     Write-Host -NoNewLine "Press any key to continue...";
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
     Exit
   }
-  $WJCompileINI += Get-IniContent $WJCompileINILocalLocation
+  $WJCompileINI += Get-IniContent $WJLocalCompileINILocation
 }
 
 # Assembling the compilation settings block 
