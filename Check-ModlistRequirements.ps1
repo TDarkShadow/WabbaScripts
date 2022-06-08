@@ -1,156 +1,151 @@
-$RegistryPath = "HKLM:\SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim Special Edition\"
+$RegistryPath = "HKLM:\SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout4\"
 If (Test-Path -Path $RegistryPath) {
   $InstallationPath = Get-ItemProperty -Path $RegistryPath | Select-Object -ExpandProperty "installed path"
 } Else {
-  Write-Error "Skyrim Special Edition not installed!" -Category NotInstalled; Exit
+  Write-Error "Fallout 4 is not installed!" -Category NotInstalled; Exit
 }
 
-$CC_SkyrimAE = @(
-  "ccafdsse001-dwesanctuary.bsa",
-  "ccafdsse001-dwesanctuary.esm",
-  "ccasvsse001-almsivi.bsa",
-  "ccasvsse001-almsivi.esm",
-  "ccbgssse002-exoticarrows.bsa",
-  "ccbgssse002-exoticarrows.esl",
-  "ccbgssse003-zombies.bsa",
-  "ccbgssse003-zombies.esl",
-  "ccbgssse004-ruinsedge.bsa",
-  "ccbgssse004-ruinsedge.esl",
-  "ccbgssse005-goldbrand.bsa",
-  "ccbgssse005-goldbrand.esl",
-  "ccbgssse006-stendarshammer.bsa",
-  "ccbgssse006-stendarshammer.esl",
-  "ccbgssse007-chrysamere.bsa",
-  "ccbgssse007-chrysamere.esl",
-  "ccbgssse008-wraithguard.bsa",
-  "ccbgssse008-wraithguard.esl",
-  "ccbgssse010-petdwarvenarmoredmudcrab.bsa",
-  "ccbgssse010-petdwarvenarmoredmudcrab.esl",
-  "ccbgssse011-hrsarmrelvn.bsa",
-  "ccbgssse011-hrsarmrelvn.esl",
-  "ccbgssse012-hrsarmrstl.bsa",
-  "ccbgssse012-hrsarmrstl.esl",
-  "ccbgssse013-dawnfang.bsa",
-  "ccbgssse013-dawnfang.esl",
-  "ccbgssse014-spellpack01.bsa",
-  "ccbgssse014-spellpack01.esl",
-  "ccbgssse016-umbra.bsa",
-  "ccbgssse016-umbra.esm",
-  "ccbgssse018-shadowrend.bsa",
-  "ccbgssse018-shadowrend.esl",
-  "ccbgssse019-staffofsheogorath.bsa",
-  "ccbgssse019-staffofsheogorath.esl",
-  "ccbgssse020-graycowl.bsa",
-  "ccbgssse020-graycowl.esl",
-  "ccbgssse021-lordsmail.bsa",
-  "ccbgssse021-lordsmail.esl",
-  "ccbgssse031-advcyrus.bsa",
-  "ccbgssse031-advcyrus.esm",
-  "ccbgssse034-mntuni.bsa",
-  "ccbgssse034-mntuni.esl",
-  "ccbgssse035-petnhound.bsa",
-  "ccbgssse035-petnhound.esl",
-  "ccbgssse036-petbwolf.bsa",
-  "ccbgssse036-petbwolf.esl",
-  "ccbgssse038-bowofshadows.bsa",
-  "ccbgssse038-bowofshadows.esl",
-  "ccbgssse040-advobgobs.bsa",
-  "ccbgssse040-advobgobs.esl",
-  "ccbgssse041-netchleather.bsa",
-  "ccbgssse041-netchleather.esl",
-  "ccbgssse043-crosselv.bsa",
-  "ccbgssse043-crosselv.esl",
-  "ccbgssse045-hasedoki.bsa",
-  "ccbgssse045-hasedoki.esl",
-  "ccbgssse050-ba_daedric.bsa",
-  "ccbgssse050-ba_daedric.esl",
-  "ccbgssse051-ba_daedricmail.bsa",
-  "ccbgssse051-ba_daedricmail.esl",
-  "ccbgssse052-ba_iron.bsa",
-  "ccbgssse052-ba_iron.esl",
-  "ccbgssse053-ba_leather.bsa",
-  "ccbgssse053-ba_leather.esl",
-  "ccbgssse054-ba_orcish.bsa",
-  "ccbgssse054-ba_orcish.esl",
-  "ccbgssse055-ba_orcishscaled.bsa",
-  "ccbgssse055-ba_orcishscaled.esl",
-  "ccbgssse056-ba_silver.bsa",
-  "ccbgssse056-ba_silver.esl",
-  "ccbgssse057-ba_stalhrim.bsa",
-  "ccbgssse057-ba_stalhrim.esl",
-  "ccbgssse058-ba_steel.bsa",
-  "ccbgssse058-ba_steel.esl",
-  "ccbgssse059-ba_dragonplate.bsa",
-  "ccbgssse059-ba_dragonplate.esl",
-  "ccbgssse060-ba_dragonscale.bsa",
-  "ccbgssse060-ba_dragonscale.esl",
-  "ccbgssse061-ba_dwarven.bsa",
-  "ccbgssse061-ba_dwarven.esl",
-  "ccbgssse062-ba_dwarvenmail.bsa",
-  "ccbgssse062-ba_dwarvenmail.esl",
-  "ccbgssse063-ba_ebony.bsa",
-  "ccbgssse063-ba_ebony.esl",
-  "ccbgssse064-ba_elven.bsa",
-  "ccbgssse064-ba_elven.esl",
-  "ccbgssse066-staves.bsa",
-  "ccbgssse066-staves.esl",
-  "ccbgssse067-daedinv.bsa",
-  "ccbgssse067-daedinv.esm",
-  "ccbgssse068-bloodfall.bsa",
-  "ccbgssse068-bloodfall.esl",
-  "ccbgssse069-contest.bsa",
-  "ccbgssse069-contest.esl",
-  "cccbhsse001-gaunt.bsa",
-  "cccbhsse001-gaunt.esl",
-  "ccedhsse001-norjewel.bsa",
-  "ccedhsse001-norjewel.esl",
-  "ccedhsse002-splkntset.bsa",
-  "ccedhsse002-splkntset.esl",
-  "ccedhsse003-redguard.bsa",
-  "ccedhsse003-redguard.esl",
-  "cceejsse001-hstead.bsa",
-  "cceejsse001-hstead.esm",
-  "cceejsse002-tower.bsa",
-  "cceejsse002-tower.esl",
-  "cceejsse003-hollow.bsa",
-  "cceejsse003-hollow.esl",
-  "cceejsse004-hall.bsa",
-  "cceejsse004-hall.esl",
-  "cceejsse005-cave.bsa",
-  "cceejsse005-cave.esm",
-  "ccffbsse001-imperialdragon.bsa",
-  "ccffbsse001-imperialdragon.esl",
-  "ccffbsse002-crossbowpack.bsa",
-  "ccffbsse002-crossbowpack.esl",
-  "ccfsvsse001-backpacks.bsa",
-  "ccfsvsse001-backpacks.esl",
-  "cckrtsse001_altar.bsa",
-  "cckrtsse001_altar.esl",
-  "ccmtysse001-knightsofthenine.bsa",
-  "ccmtysse001-knightsofthenine.esl",
-  "ccmtysse002-ve.bsa",
-  "ccmtysse002-ve.esl",
-  "ccpewsse002-armsofchaos.bsa",
-  "ccpewsse002-armsofchaos.esl",
-  "ccqdrsse002-firewood.bsa",
-  "ccqdrsse002-firewood.esl",
-  "ccrmssse001-necrohouse.bsa",
-  "ccrmssse001-necrohouse.esl",
-  "cctwbsse001-puzzledungeon.bsa",
-  "cctwbsse001-puzzledungeon.esm",
-  "ccvsvsse001-winter.bsa",
-  "ccvsvsse001-winter.esl",
-  "ccvsvsse002-pets.bsa",
-  "ccvsvsse002-pets.esl",
-  "ccvsvsse003-necroarts.bsa",
-  "ccvsvsse003-necroarts.esl",
-  "ccvsvsse004-beafarmer.bsa",
-  "ccvsvsse004-beafarmer.esl"
+$CC_Fallout4 = @(
+  "ccbgsfo4091-as_bats - main.ba2"
+  "ccbgsfo4091-as_bats - textures.ba2"
+  "ccbgsfo4091-as_bats.esl"
+  "ccbgsfo4092-as_camoblue - main.ba2"
+  "ccbgsfo4092-as_camoblue - textures.ba2"
+  "ccbgsfo4092-as_camoblue.esl"
+  "ccbgsfo4093-as_camogreen - main.ba2"
+  "ccbgsfo4093-as_camogreen - textures.ba2"
+  "ccbgsfo4093-as_camogreen.esl"
+  "ccbgsfo4094-as_camotan - main.ba2"
+  "ccbgsfo4094-as_camotan - textures.ba2"
+  "ccbgsfo4094-as_camotan.esl"
+  "ccbgsfo4095-as_childrenofatom - main.ba2"
+  "ccbgsfo4095-as_childrenofatom - textures.ba2"
+  "ccbgsfo4095-as_childrenofatom.esl"
+  "ccbgsfo4096-as_enclave - main.ba2"
+  "ccbgsfo4096-as_enclave - textures.ba2"
+  "ccbgsfo4096-as_enclave.esl"
+  "ccbgsfo4097-as_jack-olantern - main.ba2"
+  "ccbgsfo4097-as_jack-olantern - textures.ba2"
+  "ccbgsfo4097-as_jack-olantern.esl"
+  "ccbgsfo4098-as_pickman - main.ba2"
+  "ccbgsfo4098-as_pickman - textures.ba2"
+  "ccbgsfo4098-as_pickman.esl"
+  "ccbgsfo4099-as_reillysrangers - main.ba2"
+  "ccbgsfo4099-as_reillysrangers - textures.ba2"
+  "ccbgsfo4099-as_reillysrangers.esl"
+  "ccbgsfo4101-as_shi - main.ba2"
+  "ccbgsfo4101-as_shi - textures.ba2"
+  "ccbgsfo4101-as_shi.esl"
+  "ccbgsfo4103-as_tunnelsnakes - main.ba2"
+  "ccbgsfo4103-as_tunnelsnakes - textures.ba2"
+  "ccbgsfo4103-as_tunnelsnakes.esl"
+  "ccbgsfo4104-ws_bats - main.ba2"
+  "ccbgsfo4104-ws_bats - textures.ba2"
+  "ccbgsfo4104-ws_bats.esl"
+  "ccbgsfo4105-ws_camoblue - main.ba2"
+  "ccbgsfo4105-ws_camoblue - textures.ba2"
+  "ccbgsfo4105-ws_camoblue.esl"
+  "ccbgsfo4106-ws_camogreen - main.ba2"
+  "ccbgsfo4106-ws_camogreen - textures.ba2"
+  "ccbgsfo4106-ws_camogreen.esl"
+  "ccbgsfo4107-ws_camotan - main.ba2"
+  "ccbgsfo4107-ws_camotan - textures.ba2"
+  "ccbgsfo4107-ws_camotan.esl"
+  "ccbgsfo4108-ws_childrenofatom - main.ba2"
+  "ccbgsfo4108-ws_childrenofatom - textures.ba2"
+  "ccbgsfo4108-ws_childrenofatom.esl"
+  "ccbgsfo4110-ws_enclave - main.ba2"
+  "ccbgsfo4110-ws_enclave - textures.ba2"
+  "ccbgsfo4110-ws_enclave.esl"
+  "ccbgsfo4111-ws_jack-olantern - main.ba2"
+  "ccbgsfo4111-ws_jack-olantern - textures.ba2"
+  "ccbgsfo4111-ws_jack-olantern.esl"
+  "ccbgsfo4112-ws_pickman - main.ba2"
+  "ccbgsfo4112-ws_pickman - textures.ba2"
+  "ccbgsfo4112-ws_pickman.esl"
+  "ccbgsfo4113-ws_reillysrangers - main.ba2"
+  "ccbgsfo4113-ws_reillysrangers - textures.ba2"
+  "ccbgsfo4113-ws_reillysrangers.esl"
+  "ccbgsfo4114-ws_shi - main.ba2"
+  "ccbgsfo4114-ws_shi - textures.ba2"
+  "ccbgsfo4114-ws_shi.esl"
+  "ccbgsfo4118-ws_tunnelsnakes - main.ba2"
+  "ccbgsfo4118-ws_tunnelsnakes - textures.ba2"
+  "ccbgsfo4118-ws_tunnelsnakes.esl"
+  "ccgcafo4001-factionws01army - main.ba2"
+  "ccgcafo4001-factionws01army - textures.ba2"
+  "ccgcafo4001-factionws01army.esl"
+  "ccgcafo4002-factionws02acat - main.ba2"
+  "ccgcafo4002-factionws02acat - textures.ba2"
+  "ccgcafo4002-factionws02acat.esl"
+  "ccgcafo4003-factionws03bos - main.ba2"
+  "ccgcafo4003-factionws03bos - textures.ba2"
+  "ccgcafo4003-factionws03bos.esl"
+  "ccgcafo4004-factionws04gun - main.ba2"
+  "ccgcafo4004-factionws04gun - textures.ba2"
+  "ccgcafo4004-factionws04gun.esl"
+  "ccgcafo4005-factionws05hrpink - main.ba2"
+  "ccgcafo4005-factionws05hrpink - textures.ba2"
+  "ccgcafo4005-factionws05hrpink.esl"
+  "ccgcafo4006-factionws06hrshark - main.ba2"
+  "ccgcafo4006-factionws06hrshark - textures.ba2"
+  "ccgcafo4006-factionws06hrshark.esl"
+  "ccgcafo4007-factionws07hrflames - main.ba2"
+  "ccgcafo4007-factionws07hrflames - textures.ba2"
+  "ccgcafo4007-factionws07hrflames.esl"
+  "ccgcafo4008-factionws08inst - main.ba2"
+  "ccgcafo4008-factionws08inst - textures.ba2"
+  "ccgcafo4008-factionws08inst.esl"
+  "ccgcafo4009-factionws09mm - main.ba2"
+  "ccgcafo4009-factionws09mm - textures.ba2"
+  "ccgcafo4009-factionws09mm.esl"
+  "ccgcafo4010-factionws10rr - main.ba2"
+  "ccgcafo4010-factionws10rr - textures.ba2"
+  "ccgcafo4010-factionws10rr.esl"
+  "ccgcafo4011-factionws11vt - main.ba2"
+  "ccgcafo4011-factionws11vt - textures.ba2"
+  "ccgcafo4011-factionws11vt.esl"
+  "ccgcafo4012-factionas01acat - main.ba2"
+  "ccgcafo4012-factionas01acat - textures.ba2"
+  "ccgcafo4012-factionas01acat.esl"
+  "ccgcafo4013-factionas02bos - main.ba2"
+  "ccgcafo4013-factionas02bos - textures.ba2"
+  "ccgcafo4013-factionas02bos.esl"
+  "ccgcafo4014-factionas03gun - main.ba2"
+  "ccgcafo4014-factionas03gun - textures.ba2"
+  "ccgcafo4014-factionas03gun.esl"
+  "ccgcafo4015-factionas04hrpink - main.ba2"
+  "ccgcafo4015-factionas04hrpink - textures.ba2"
+  "ccgcafo4015-factionas04hrpink.esl"
+  "ccgcafo4016-factionas05hrshark - main.ba2"
+  "ccgcafo4016-factionas05hrshark - textures.ba2"
+  "ccgcafo4016-factionas05hrshark.esl"
+  "ccgcafo4017-factionas06inst - main.ba2"
+  "ccgcafo4017-factionas06inst - textures.ba2"
+  "ccgcafo4017-factionas06inst.esl"
+  "ccgcafo4018-factionas07mm - main.ba2"
+  "ccgcafo4018-factionas07mm - textures.ba2"
+  "ccgcafo4018-factionas07mm.esl"
+  "ccgcafo4019-factionas08nuk - main.ba2"
+  "ccgcafo4019-factionas08nuk - textures.ba2"
+  "ccgcafo4019-factionas08nuk.esl"
+  "ccgcafo4020-factionas09rr - main.ba2"
+  "ccgcafo4020-factionas09rr - textures.ba2"
+  "ccgcafo4020-factionas09rr.esl"
+  "ccgcafo4021-factionas10hrflames - main.ba2"
+  "ccgcafo4021-factionas10hrflames - textures.ba2"
+  "ccgcafo4021-factionas10hrflames.esl"
+  "ccgcafo4022-factionas11vt - main.ba2"
+  "ccgcafo4022-factionas11vt - textures.ba2"
+  "ccgcafo4022-factionas11vt.esl"
+  "ccgcafo4023-factionas12army - main.ba2"
+  "ccgcafo4023-factionas12army - textures.ba2"
+  "ccgcafo4023-factionas12army.esl"
 )
 
 $CC_Installed = Get-ChildItem -Path ($InstallationPath + "Data") -Filter "cc*" | Select-Object -ExpandProperty Name
 
-$CC_Comparison = Compare-Object -ReferenceObject $CC_Installed -DifferenceObject $CC_SkyrimAE
+$CC_Comparison = Compare-Object -ReferenceObject $CC_Installed -DifferenceObject $CC_Fallout4
 
 If ($CC_Comparison | Where-Object { $_.SideIndicator -eq "=>" } | Select-Object -ExpandProperty InputObject) {
   Write-Host ("You're missing the following CC;")
